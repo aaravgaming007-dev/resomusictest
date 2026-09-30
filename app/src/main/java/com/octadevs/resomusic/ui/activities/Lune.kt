@@ -962,12 +962,12 @@ fun MainScreen(
     ) {
         val scrollToCurrentTrigger = remember { mutableStateOf(0) }
 
-        if (hasBlurBackgroundMini && currentSong != null) {
+        if (currentSong != null) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .blur(80.dp)
-                    .alpha(if (isDarkThemeMini) 0.35f else 0.45f)
+                    .blur(100.dp)
+                    .alpha(if (isDarkThemeMini) 0.6f else 0.7f)
             ) {
                 val sharedBlurReq = remember(currentSong.id, currentSong.coverUrl) {
                     ImageRequest.Builder(context)
@@ -985,14 +985,10 @@ fun MainScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(
-                        if (isDarkThemeMini) {
-                            Color.Black.copy(alpha = 0.52f)
-                        } else {
-                            Color.Black.copy(alpha = 0.28f)
-                        }
-                    )
+                    .background(Color.Black.copy(alpha = if (isDarkThemeMini) 0.3f else 0.1f))
             )
+        } else {
+            AnimatedLiquidGlass(isDarkTheme = isDarkThemeMini)
         }
 
         Scaffold(
@@ -1107,30 +1103,15 @@ fun MainScreen(
                             AnimatedLogo(
                                 isPlaying = isPlaying,
                                 tintColor = titleColor,
-                                modifier = Modifier.padding(end = 6.dp)
+                                modifier = Modifier.padding(end = 4.dp)
                             )
                             ResponsiveText(
                                 text = titleText,
-                                modifier = Modifier.weight(1f, fill = false),
+                                modifier = Modifier.weight(1f).fillMaxWidth(),
                                 targetTextSize = 32.sp,
                                 color = titleColor,
                                 fontWeight = FontWeight.Bold
                             )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Surface(
-                                shape = RoundedCornerShape(12.dp),
-                                color = titleColor.copy(alpha = 0.1f),
-                                border = BorderStroke(1.dp, titleColor.copy(alpha = 0.3f))
-                            ) {
-                                Text(
-                                    text = "8D AUDIO",
-                                    color = titleColor,
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.ExtraBold,
-                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                                )
-                            }
-                            Spacer(modifier = Modifier.weight(1f))
                         }
                     },
                     scrollBehavior = scrollBehavior,
