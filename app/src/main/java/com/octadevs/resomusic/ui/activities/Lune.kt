@@ -1107,15 +1107,30 @@ fun MainScreen(
                             AnimatedLogo(
                                 isPlaying = isPlaying,
                                 tintColor = titleColor,
-                                modifier = Modifier.padding(end = 0.5.dp)
+                                modifier = Modifier.padding(end = 6.dp)
                             )
                             ResponsiveText(
                                 text = titleText,
-                                modifier = Modifier.weight(1f).fillMaxWidth(),
+                                modifier = Modifier.weight(1f, fill = false),
                                 targetTextSize = 32.sp,
                                 color = titleColor,
                                 fontWeight = FontWeight.Bold
                             )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Surface(
+                                shape = RoundedCornerShape(12.dp),
+                                color = titleColor.copy(alpha = 0.1f),
+                                border = BorderStroke(1.dp, titleColor.copy(alpha = 0.3f))
+                            ) {
+                                Text(
+                                    text = "8D AUDIO",
+                                    color = titleColor,
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.weight(1f))
                         }
                     },
                     scrollBehavior = scrollBehavior,

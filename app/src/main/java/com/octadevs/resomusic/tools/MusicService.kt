@@ -86,6 +86,7 @@ class MusicService : MediaLibraryService() {
     private var wasPlayingBeforeLoss = false
     private var widgetUpdateJob: Job? = null
     private var spatialRampJob: Job? = null
+    private var eightDAudioJob: Job? = null
     private var currentSpatialStrength: Short = 0
     private var lastSongForBlur: Song? = null
     private var lastBlurredBitmap: Bitmap? = null
@@ -1650,9 +1651,31 @@ class MusicService : MediaLibraryService() {
     }
 
     fun applyBalance(balance: Float) {
+        if (eightDAudioJob?.isActive == true) return
         val (left, right) = BalanceEffect.volumesForBalance(balance)
         mediaPlayer?.setVolume(left, right)
         secondaryPlayer?.setVolume(left, right)
+    }
+
+    fun set8DAudioEnabled(enabled: Boolean) {
+        eightDAudioJob?.cancel()
+        if (enabled) {
+            eightDAudioJob = serviceScope.launch {
+                var t = 0f
+                while (isActive) {
+                    val pan = (kotlin.math.sin(t.toDouble()).toFloat() + 1f) / 2f
+                    val (left, right) = BalanceEffect.volumesForBalance(pan)
+                    mediaPlayer?.setVolume(left, right)
+                    secondaryPlayer?.setVolume(left, right)
+                    t += 0.05f
+                    delay(50)
+                }
+            }
+        } else {
+            val (left, right) = BalanceEffect.volumesForBalance(settingsManager.balance)
+            mediaPlayer?.setVolume(left, right)
+            secondaryPlayer?.setVolume(left, right)
+        }
     }
 
     fun setLoudnessEnabled(enabled: Boolean) {

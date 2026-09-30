@@ -494,6 +494,10 @@ class SettingsManager(context: Context) {
         get() = prefs.getFloat("balance", 0.5f)
         set(value) = prefs.edit().putFloat("balance", value).apply()
 
+    var is8DAudioEnabled: Boolean
+        get() = prefs.getBoolean("is_8d_audio_enabled", false)
+        set(value) = prefs.edit().putBoolean("is_8d_audio_enabled", value).apply()
+
     var dynamicsPreset: Int
         get() = prefs.getInt("dynamics_preset", 0)
         set(value) = prefs.edit().putInt("dynamics_preset", value).apply()

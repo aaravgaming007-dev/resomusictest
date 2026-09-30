@@ -101,33 +101,92 @@ fun AppBlurBackdrop(
             .clip(shape)
             .background(if (hasBlurBackground) (if (currentSong != null) baseBgColor else fallbackBlurBg) else MaterialTheme.colorScheme.surface)
     ) {
-        if (hasBlurBackground && currentSong != null) {
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .blur(80.dp)
-                    .alpha(if (isDarkTheme) 0.35f else 0.45f)
-            ) {
-                val req = remember(currentSong.id, currentSong.coverUrl) {
-                    coil.request.ImageRequest.Builder(context)
-                        .data(currentSong.coverUrl ?: currentSong.albumArtUri ?: currentSong.uri)
-                        .crossfade(true)
-                        .build()
+        if (hasBlurBackground) {
+            if (currentSong != null) {
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .blur(80.dp)
+                        .alpha(if (isDarkTheme) 0.35f else 0.45f)
+                ) {
+                    val req = remember(currentSong.id, currentSong.coverUrl) {
+                        coil.request.ImageRequest.Builder(context)
+                            .data(currentSong.coverUrl ?: currentSong.albumArtUri ?: currentSong.uri)
+                            .crossfade(true)
+                            .build()
+                    }
+                    AsyncImage(
+                        model = req,
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
                 }
-                AsyncImage(
-                    model = req,
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .background(Color.Black.copy(alpha = if (isDarkTheme) 0.50f else 0.20f))
                 )
+            } else {
+                AnimatedLiquidGlass(isDarkTheme = isDarkTheme)
             }
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .background(Color.Black.copy(alpha = if (isDarkTheme) 0.50f else 0.20f))
-            )
         }
         content()
+    }
+}
+
+@Composable
+fun AnimatedLiquidGlass(isDarkTheme: Boolean) {
+    val infiniteTransition = rememberInfiniteTransition(label = "liquid")
+    val anim1 by infiniteTransition.animateFloat(
+        initialValue = 0f, targetValue = 360f,
+        animationSpec = infiniteRepeatable(tween(15000, easing = LinearEasing), RepeatMode.Restart), label = "a1"
+    )
+    val anim2 by infiniteTransition.animateFloat(
+        initialValue = 360f, targetValue = 0f,
+        animationSpec = infiniteRepeatable(tween(20000, easing = LinearEasing), RepeatMode.Restart), label = "a2"
+    )
+    val anim3 by infiniteTransition.animateFloat(
+        initialValue = 0f, targetValue = 360f,
+        animationSpec = infiniteRepeatable(tween(12000, easing = LinearEasing), RepeatMode.Restart), label = "a3"
+    )
+    
+    val color1 = if (isDarkTheme) Color(0xFF1E3A8A) else Color(0xFFDBEAFE)
+    val color2 = if (isDarkTheme) Color(0xFF581C87) else Color(0xFFF3E8FF)
+    val color3 = if (isDarkTheme) Color(0xFF831843) else Color(0xFFFCE7F3)
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .blur(80.dp)
+            .drawWithContent {
+                val width = size.width
+                val height = size.height
+                val radius = width.coerceAtLeast(height) * 0.55f
+
+                androidx.compose.ui.graphics.drawscope.withTransform({
+                    rotate(anim1, Offset(width * 0.4f, height * 0.4f))
+                }) {
+                    drawCircle(color1, radius = radius * 0.8f, center = Offset(width * 0.2f, height * 0.2f))
+                }
+                androidx.compose.ui.graphics.drawscope.withTransform({
+                    rotate(anim2, Offset(width * 0.6f, height * 0.6f))
+                }) {
+                    drawCircle(color2, radius = radius * 0.9f, center = Offset(width * 0.8f, height * 0.5f))
+                }
+                androidx.compose.ui.graphics.drawscope.withTransform({
+                    rotate(anim3, Offset(width * 0.5f, height * 0.5f))
+                }) {
+                    drawCircle(color3, radius = radius * 0.7f, center = Offset(width * 0.5f, height * 0.8f))
+                }
+                drawContent()
+            }
+    ) {
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .background(Color.White.copy(alpha = if (isDarkTheme) 0.05f else 0.3f))
+        )
     }
 }
 

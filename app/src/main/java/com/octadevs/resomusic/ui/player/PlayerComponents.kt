@@ -1476,6 +1476,30 @@ fun FullPlayer(
                                                 .background(pillDivider)
                                         )
 
+                                        // 3.5 8D Audio
+                                        Box(
+                                            modifier = Modifier
+                                                .bounceClick(0.92f)
+                                                .clip(CircleShape)
+                                                .clickable { playbackManager.toggle8DAudio() }
+                                                .padding(horizontal = 10.dp, vertical = 6.dp),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Text(
+                                                "8D",
+                                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                                color = if (playbackManager.is8DAudioEnabled) (if (hasBlurBackground) Color.White else MaterialTheme.colorScheme.primary) else (if (hasBlurBackground) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f))
+                                            )
+                                        }
+
+                                        // Divider
+                                        Box(
+                                            modifier = Modifier
+                                                .width(1.dp)
+                                                .height(18.dp)
+                                                .background(pillDivider)
+                                        )
+
                                         // 4. Options
                                         Box(
                                             modifier = Modifier

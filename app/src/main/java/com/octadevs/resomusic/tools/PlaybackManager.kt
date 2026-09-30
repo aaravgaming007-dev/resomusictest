@@ -226,6 +226,8 @@ class PlaybackManager private constructor(private val context: Context) {
         private set
     var balance by mutableStateOf(settings.balance)
         private set
+    var is8DAudioEnabled by mutableStateOf(settings.is8DAudioEnabled)
+        private set
     var dynamicsPreset by mutableStateOf(settings.dynamicsPreset)
         private set
     var isLoudnessEnabled by mutableStateOf(settings.isLoudnessEnabled)
@@ -305,6 +307,7 @@ class PlaybackManager private constructor(private val context: Context) {
             val binder = service as MusicService.MusicBinder
             musicService = binder.getService()
             isBound = true
+            musicService?.set8DAudioEnabled(is8DAudioEnabled)
             pendingPlaySong?.let { 
                 try {
                     musicService?.playSong(it)
@@ -1241,6 +1244,12 @@ class PlaybackManager private constructor(private val context: Context) {
         this.balance = balance
         settings.balance = balance
         musicService?.applyBalance(balance)
+    }
+
+    fun toggle8DAudio() {
+        is8DAudioEnabled = !is8DAudioEnabled
+        settings.is8DAudioEnabled = is8DAudioEnabled
+        musicService?.set8DAudioEnabled(is8DAudioEnabled)
     }
 
     fun updateDynamicsPreset(preset: Int) {
