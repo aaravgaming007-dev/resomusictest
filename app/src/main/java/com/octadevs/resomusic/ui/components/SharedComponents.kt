@@ -58,6 +58,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -164,17 +165,17 @@ fun AnimatedLiquidGlass(isDarkTheme: Boolean) {
                 val height = size.height
                 val radius = width.coerceAtLeast(height) * 0.55f
 
-                androidx.compose.ui.graphics.drawscope.withTransform({
+                withTransform({
                     rotate(anim1, Offset(width * 0.4f, height * 0.4f))
                 }) {
                     drawCircle(color1, radius = radius * 0.8f, center = Offset(width * 0.2f, height * 0.2f))
                 }
-                androidx.compose.ui.graphics.drawscope.withTransform({
+                withTransform({
                     rotate(anim2, Offset(width * 0.6f, height * 0.6f))
                 }) {
                     drawCircle(color2, radius = radius * 0.9f, center = Offset(width * 0.8f, height * 0.5f))
                 }
-                androidx.compose.ui.graphics.drawscope.withTransform({
+                withTransform({
                     rotate(anim3, Offset(width * 0.5f, height * 0.5f))
                 }) {
                     drawCircle(color3, radius = radius * 0.7f, center = Offset(width * 0.5f, height * 0.8f))
